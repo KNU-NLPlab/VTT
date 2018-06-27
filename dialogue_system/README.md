@@ -18,7 +18,8 @@ Denoising.py
 ```
 
 디노이징 메커니즘을 적용하기 위한 모듈 코드 입니다.
-pytorch를 기반으로 작성하였으며 opennmt-py의 모듈로 사용가능 합니다.
+
+pytorch를 기반으로 작성하였으며 [OpenNMT-py](https://github.com/OpenNMT/OpenNMT-py)의 모듈로 사용가능 합니다.
 
 
 * def noise_src(src, src_lengths)
