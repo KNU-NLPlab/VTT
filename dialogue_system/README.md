@@ -21,7 +21,7 @@ Denoising.py
 pytorch를 기반으로 작성하였으며 opennmt-py의 모듈로 사용가능 합니다.
 
 
-* def noise_src
+* def noise_src(src, src_lengths)
 
 Denoising mechanism에서 노이징 함수로 "drop+swap" noise가 구현된 상태입니다.
 입력으로 src sequence tensor와 각 sequence의 길이를 저장하는 src_lengths tensor를 받아
