@@ -1,0 +1,3 @@
+tqdm
+konlpy
+JPype1-py3
