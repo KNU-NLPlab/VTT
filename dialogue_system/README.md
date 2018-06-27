@@ -1,7 +1,7 @@
 # VTT 1차년도 대화 모델
 
 VTT 과제 1차년도 대화 모델 코드 입니다. 디노이징 메커니즘을 적용한 sequence-to-sequence 모델기반 대화 모델 입니다.
-sequence-to-sequence 모델은 opensource framework인 [OpenNMT-py](https://github.com/OpenNMT/OpenNMT-py)[MIT lisence]를 기반으로 하였습니다.
+sequence-to-sequence 모델은 opensource framework인 [OpenNMT-py](https://github.com/OpenNMT/OpenNMT-py)[MIT lisence]를 상정하고 작성하였으며 repository에는 denoising mechanism 구현 코드가 업로드 되어 있습니다.
 
 ## Denoising mechanism
 
@@ -11,62 +11,18 @@ sequence-to-sequence 모델은 opensource framework인 [OpenNMT-py](https://gith
 </p>
 
 
-## Requirements
+## Description
 
 ```bash
-pip install -r requirements.txt
+Denoising.py
 ```
 
-## Quickstart
-
-### Step 1: Preprocess the data
-
-```bash
-python preprocess.py -train_src data/src-train.txt -train_tgt data/tgt-train.txt -valid_src data/src-val.txt -valid_tgt data/tgt-val.txt -save_data data/demo
-```
-
-data는 입력 발화와 출력 발화가 각각의 source (`src`) and target (`tgt`) 파일에 line단위로 저장하여야하며 각 line은 공백으로 구분되는 token 구성해야 합니다.
-
-* `src-train.txt`
-* `tgt-train.txt`
-* `src-val.txt`
-* `tgt-val.txt`
-
-Validation 파일은 training 과정에서 모델의 convergence를 측정하는데 사용됩니다.
+디노이징 메커니즘을 적용하기 위한 모듈 코드 입니다.
+pytorch를 기반으로 작성하였으며 opennmt-py의 모듈로 사용가능 합니다.
 
 
-전처리 결과로 아래와 같은 파일들이 생성 됩니다.:
+* def noise_src
 
-* `demo.train.pt`: serialized PyTorch file containing training data
-* `demo.valid.pt`: serialized PyTorch file containing validation data
-* `demo.vocab.pt`: serialized PyTorch file containing vocabulary data
-
-모델 내부적으로 각 단어들을 직접적으로 다루지않고 단어들의 index 정보를 이용합니다.
-
-### Step 2: Train the model
-
-```bash
-python train.py -data data/demo -save_model demo-model -gpuid 1
-```
-
-해당 학습 command는 가장 단순한 예시 입니다. 최소한의 파라미터로 전처리 과정에서 생성한 데이터 파일, 모델을 저장할 path, 학습에 사용할
-gpu index를 받습니다(해당 모델 학습을 위해서는 gpu를 반드시 사용하여야 합니다) 이 command를 실행하여 학습하면 500 hidden units의 2-layer LSTM으로 이뤄진 encoder/decoder를 학습합니다.
-
-보다 다양한 파라미터는 `opt.py` 파일을 참조하시기 바랍니다.
-
-### Step 3-1: Evaluation using file
-
-```bash
-python translate.py -model demo-model_acc_XX.XX_ppl_XXX.XX_eX.pt -src data/src-test.txt -output pred.txt -replace_unk -verbose
-```
-
-학습한 모델을 평가하는 과정으로 입력 데이터로 txt파일을 사용합니다. output generation에는 beam search가 사용됩니다. 해당 command를 통해 input에
- 대한 응답이 `pred.txt`에 저장됩니다.
- 
-### Step 3-2: Evaluation on shell
-
-```bash
-python online_test.py -model demo-model_acc_XX.XX_ppl_XXX.XX_eX.pt 
-```
-
-학습한 모델을 파일을 이용해서 평가하지 않고 shell 상에서 console 입력을 통해 평가합니다. 
+Denoising mechanism에서 노이징 함수로 "drop+swap" noise가 구현된 상태입니다.
+입력으로 src sequence tensor와 각 sequence의 길이를 저장하는 src_lengths tensor를 받아
+노이즈를 부과하며 noise가 부과된 sequence tensor와 그에 해당하는 lengths tensor를 반환합니다.
